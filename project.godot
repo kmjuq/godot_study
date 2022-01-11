@@ -1,0 +1,53 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node",
+"class": "ScriptClass",
+"language": "GDScript",
+"path": "res://scenes/script_class/ScriptClass.gd"
+} ]
+_global_script_class_icons={
+"ScriptClass": "res://assets/buddy_orange.png"
+}
+
+[application]
+
+config/name="Docs"
+run/main_scene="res://scenes/dodge/Main.tscn"
+
+[display]
+
+window/size/width=1280
+window/size/height=720
+window/handheld/orientation="portrait"
+window/ios/hide_home_indicator=false
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
+
+[global]
+
+display=false
+
+[input]
+
+start_game={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":32,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+
+[locale]
+
+locale_filter=[ 0, [ "zh_CN" ] ]
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
