@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/gameover.wav-b524840dc98ac4c5215c53121cd906bb.sample"
+
+[deps]
+
+source_file="res://assets/example/dodge_assets/art/gameover.wav"
+dest_files=[ "res://.import/gameover.wav-b524840dc98ac4c5215c53121cd906bb.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

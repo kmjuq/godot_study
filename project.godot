@@ -12,16 +12,16 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "ScriptClass",
 "language": "GDScript",
-"path": "res://scenes/script_class/ScriptClass.gd"
+"path": "res://scenes/study/script_class/ScriptClass.gd"
 } ]
 _global_script_class_icons={
-"ScriptClass": "res://assets/buddy_orange.png"
+"ScriptClass": "res://assets/study/script_class/buddy_orange.png"
 }
 
 [application]
 
 config/name="Docs"
-run/main_scene="res://scenes/dodge/Main.tscn"
+run/main_scene="res://scenes/example/dodge/Main.tscn"
 
 [display]
 

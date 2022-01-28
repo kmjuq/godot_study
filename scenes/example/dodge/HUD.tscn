@@ -1,0 +1,119 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/example/dodge_assets/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends CanvasLayer
+
+var score:int = 0 # 统计分数
+var game_status = 0 # 用于判断是否可以通过 space 键开始游戏
+	
+func _input(event):
+	if event.is_action_pressed(\"start_game\") && game_status == 0:
+		get_tree().call_group(\"start_game\",\"start_game\")
+	pass	
+
+func _ready():
+	add_to_group(\"end_game\")
+	add_to_group(\"start_game\")
+	
+func end_game():
+	$ScoreTimer.stop()
+	$Message.text = \"Game Over\"
+	$Message.show()
+
+	yield(get_tree().create_timer(1), \"timeout\")
+	$Message.text = \"Dodge the Creeps!\"
+	$Message.show()
+
+	yield(get_tree().create_timer(1), \"timeout\")
+	$StartButton.show()
+	game_status=0
+	pass
+
+func start_game():
+	game_status=1
+	$Message.hide()
+	$StartButton.hide()
+	$ScoreTimer.start()
+	score_label_text(0)
+	pass
+
+func _on_StartButton_pressed():
+	get_tree().call_group(\"start_game\",\"start_game\")
+	pass
+
+func _on_ScoreTimer_timeout():
+	score = score + 1
+	score_label_text(score)
+	pass
+	
+func score_label_text(num:int):
+	score = num
+	$ScoreLabel.text = String(score)
+"
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 48
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 64
+font_data = ExtResource( 1 )
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = SubResource( 4 )
+
+[node name="Message" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -309.0
+margin_top = -39.0
+margin_right = 309.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 1 )
+text = "Dodge the Creeps!"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -16.0
+margin_top = 128.0
+margin_right = 24.0
+margin_bottom = 186.0
+custom_fonts/font = SubResource( 3 )
+text = "0"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -88.0
+margin_top = -216.0
+margin_right = 92.0
+margin_bottom = -132.0
+custom_fonts/font = SubResource( 2 )
+text = "Start"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]

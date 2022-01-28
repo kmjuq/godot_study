@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/study/instancing/Barrier.tscn" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var Ball = preload(\"res://scenes/study/instancing/Ball.tscn\")
+
+func _ready():
+	pass
+	
+func _input(event):
+	var mouse_position:Vector2 = get_viewport().get_mouse_position()
+	if event.is_pressed():
+		var ball = Ball.instance()
+		ball.position = mouse_position
+		ball.weight=98
+		add_child(ball)
+"
+
+[node name="Node2D" type="Node2D"]
+position = Vector2( 131.03, 81.5728 )
+script = SubResource( 1 )
+
+[node name="platform" type="Node2D" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody2D" parent="platform" instance=ExtResource( 1 )]
+position = Vector2( 501.641, 445.76 )
+scale = Vector2( 3, 1 )
+
+[node name="StaticBody2D2" parent="platform" instance=ExtResource( 1 )]
+position = Vector2( 115.645, 269.428 )
+rotation = 1.5708
+scale = Vector2( 1.4, 1 )
+
+[node name="StaticBody2D3" parent="platform" instance=ExtResource( 1 )]
+position = Vector2( 884.848, 261.592 )
+rotation = 1.5708
+scale = Vector2( 1.4, 1 )

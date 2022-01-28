@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Panel
+
+func _ready():
+#	创建节点，修改节点名称，加入到子节点中
+	var s:Sprite = Sprite.new()
+	s.name='Sprite_01'
+	add_child(s)
+	pass
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Label
+
+func _ready():
+#	讲该节点添加到组
+	add_to_group(\"sayHello\")
+	pass
+
+func call_group_sayHello():
+	print(\"_on_Button_pressed_group Label\")
+	pass
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Button
+
+func _ready():
+#	讲该节点添加到组
+	add_to_group(\"sayHello\")
+	pass
+
+# 只需要关注 get_node 方法
+func _on_Button_pressed():
+#	查找节点，相对路径方式和绝对路径方式
+	get_node(\"/root/Control/Panel/Label\").text=\"HELLO!\"
+	get_parent().get_node(\"Label\").text=\"HELLO!\"
+	
+#	通知同一组的节点出发指定函数
+	get_tree().call_group(\"sayHello\",\"call_group_sayHello\")
+	
+#	释放节点
+	get_node(\"/root/Control/Panel/Sprite_01\").queue_free()
+	pass
+	
+func call_group_sayHello():
+	print(\"_on_Button_pressed_group Button\")
+	pass
+"
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Panel"]
+margin_left = 301.253
+margin_top = 118.99
+margin_right = 642.253
+margin_bottom = 309.99
+text = "this is a label"
+script = SubResource( 2 )
+
+[node name="Button" type="Button" parent="Panel"]
+margin_left = 336.271
+margin_top = 374.388
+margin_right = 605.271
+margin_bottom = 456.388
+text = "Press Me"
+script = SubResource( 3 )
+
+[connection signal="pressed" from="Panel/Button" to="Panel/Button" method="_on_Button_pressed"]

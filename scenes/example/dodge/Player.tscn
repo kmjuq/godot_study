@@ -1,0 +1,140 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://assets/example/dodge_assets/art/playerGrey_walk1.png" type="Texture" id=2]
+[ext_resource path="res://assets/example/dodge_assets/art/playerGrey_walk2.png" type="Texture" id=3]
+[ext_resource path="res://assets/example/dodge_assets/art/playerGrey_up1.png" type="Texture" id=4]
+[ext_resource path="res://assets/example/dodge_assets/art/playerGrey_up2.png" type="Texture" id=5]
+[ext_resource path="res://assets/example/dodge_assets/art/gameover.wav" type="AudioStream" id=6]
+
+[sub_resource type="GDScript" id=8]
+script/source = "extends Area2D
+
+export var speed = 400
+onready var screen_size = get_viewport_rect().size
+
+func _ready():
+	add_to_group(\"start_game\")
+	add_to_group(\"end_game\")
+	pass
+
+func _process(delta):
+	var velocity = Vector2.ZERO
+	if Input.is_action_pressed(\"ui_up\"):
+		velocity.y = -1
+		upAnimate()
+	if Input.is_action_pressed(\"ui_down\"):
+		velocity.y = 1
+		downAnimate()
+	if Input.is_action_pressed(\"ui_left\"):
+		velocity.x = -1
+		leftAnimate()
+	if Input.is_action_pressed(\"ui_right\"):
+		velocity.x = 1
+		rightAnimate()
+		
+	if velocity.length() > 0 :
+		velocity = velocity.normalized() * speed
+		$AnimatedSprite.play()
+	else:
+		$AnimatedSprite.stop()
+	
+	position += velocity * delta
+	position.x = clamp(position.x,0,screen_size.x)
+	position.y = clamp(position.y,0,screen_size.y)
+	pass
+
+
+# 左右翻转为水平翻转，即 flip_h
+# 上下翻转为垂直翻转，即 flip_v
+func upAnimate():
+	$AnimatedSprite.animation='up'
+	$AnimatedSprite.flip_v=false
+	
+func downAnimate():
+	$AnimatedSprite.animation='up'
+	$AnimatedSprite.flip_v=true
+	
+func leftAnimate():
+	$AnimatedSprite.animation='walk'
+	$AnimatedSprite.flip_h=true
+	
+func rightAnimate():
+	$AnimatedSprite.animation='walk'
+	$AnimatedSprite.flip_h=false
+	
+func start_game():
+	$DeathSound.stop()
+	pass
+	
+func end_game():
+	$DeathSound.play()
+	pass
+"
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "up",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "right",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 26.1701
+height = 14.822
+
+[sub_resource type="Gradient" id=3]
+colors = PoolColorArray( 1, 1, 1, 0.501961, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0.00501098, 0.5 ), 0.0, 0.0, 0, 0, Vector2( 0.994989, 0.324 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=7]
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.75
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 4 )
+
+[node name="Player" type="Area2D"]
+z_index = 10
+script = SubResource( 8 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.5, 0.5 )
+frames = SubResource( 1 )
+animation = "right"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
+
+[node name="Trail" type="Particles2D" parent="."]
+z_index = -1
+amount = 10
+speed_scale = 2.0
+local_coords = false
+process_material = SubResource( 7 )
+texture = ExtResource( 2 )
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+pause_mode = 2
+stream = ExtResource( 6 )
+
+[connection signal="body_entered" from="." to="." method="_on_Player_body_entered"]
